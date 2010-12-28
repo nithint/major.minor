@@ -1,0 +1,9 @@
+<!--
+  This view is used to render the plugin list page.
+
+  Since we don't really have anything dynamic here, let's just use static HTML. 
+-->
+<div>
+  This plugin allows build names of the form major.minor.revision. A new environment variable BUILD_NAME is 
+  available for scripts to get access to the build name. 
+</div>
