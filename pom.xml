@@ -9,7 +9,7 @@
 
   <groupId>org.jvnet.hudson.tools</groupId>
   <artifactId>majorminor</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through maven.glassfish.org, which proxies all the artifacts that we need
