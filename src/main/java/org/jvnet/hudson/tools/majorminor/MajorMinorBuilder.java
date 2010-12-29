@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jvnet.hudson.tools.majorminor;
 
 import hudson.Extension;
@@ -9,20 +6,11 @@ import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Run;
-import hudson.model.Descriptor.FormException;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
-import hudson.tasks.Builder;
-import hudson.tasks.BuildWrapper.Environment;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +21,6 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
-
 /**
  * 
  * Changes the build name so that it follows a major.minor.revision format. For
@@ -50,6 +37,7 @@ public class MajorMinorBuilder extends BuildWrapper
 {
 
 	private static final String REGEX_NO_MATCH_ERROR = "[MajorMinor Plugin] Previous build name doesn't match Build Name Regex.";
+	private static final String LOG_NOTE = "[MajorMinor Plugin] Build Name Changed to %1s.";
 	public static final String DEFAULT_BUILD_NAME_REGEX = "\\d+\\.\\d+\\.(\\d+)";
 	public static final String DEFAULT_FIRST_BUILD_NAME = "0.0.00";
 	private static final String SVN_REVISION_FIELD = "SVN_REVISION";
@@ -66,25 +54,19 @@ public class MajorMinorBuilder extends BuildWrapper
 	 */
 	private final String firstBuildName;
 
-	/**
-	 * {@link MajorMinorBuilder#buildNameRegex as a {@link Pattern} object
-	 */
-	private final Pattern pattern;
-
 	@DataBoundConstructor
 	public MajorMinorBuilder(String buildNameRegex, String firstBuildName)
 	{
 		if (buildNameRegex == null || buildNameRegex.isEmpty())
 			this.buildNameRegex = DEFAULT_BUILD_NAME_REGEX;
 		else
+		{
 			this.buildNameRegex = buildNameRegex;
-
+		}
 		if (firstBuildName == null || firstBuildName.isEmpty())
-			this.firstBuildName = firstBuildName;
+			this.firstBuildName = DEFAULT_FIRST_BUILD_NAME;
 		else
 			this.firstBuildName = firstBuildName;
-
-		this.pattern = Pattern.compile(buildNameRegex);
 	}
 
 	public String getBuildNameRegex()
@@ -135,13 +117,16 @@ public class MajorMinorBuilder extends BuildWrapper
 			}
 			
 			String nextBuildName = "";
-			Matcher m = pattern.matcher(prevBuildName);
+			Matcher m = Pattern.compile(this.getBuildNameRegex()).matcher(prevBuildName);
 			if (m.matches() && m.group(1) != null)
 			{
 				nextBuildName = prevBuildName.substring(0,
 						m.start(1))
-						+ revision
-						+ prevBuildName.substring(m.end(1) + 1);
+						+ revision;
+				
+				// add any suffix if it exists
+				if(m.end(1)+1 < prevBuildName.length())
+						nextBuildName += prevBuildName.substring(m.end(1) + 1);
 			} else
 			{
 				// build name doesn't match pattern. error
@@ -155,8 +140,10 @@ public class MajorMinorBuilder extends BuildWrapper
 			final String newBuildName = nextBuildName;
 
 			//set build name (only available since Hudson v1.390)
-			//build.setDisplayName(newBuildName);
+			build.setDisplayName(newBuildName);
 			
+			// add a note to the log that name was changed
+			listener.getLogger().println(String.format(LOG_NOTE, newBuildName));
 			return new Environment()
 			{
 				@Override
@@ -231,7 +218,9 @@ public class MajorMinorBuilder extends BuildWrapper
 			} catch (PatternSyntaxException e)
 			{
 				return FormValidation
-						.error("The given expression is not a valid pattern");
+						.error("The given expression is not a valid pattern. Syntax Error: " + e.getMessage() + 
+								"Description: " + e.getDescription() +
+								"Error index: " + e.getIndex());
 			}
 		}
 	}
