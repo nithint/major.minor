@@ -1,0 +1,8 @@
+  MajorMinor Plugin
+  
+  This plugin allows build names of the form major.minor.revision. A new environment variable BUILD_NAME is 
+  available for scripts to get access to the build name.
+  If the project is not scm based, then the build number is used instead of revision # to form the build
+  name. 
+  
+  
