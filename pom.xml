@@ -38,8 +38,12 @@
     <developer>
       <id>nthomas</id>
       <name>Nithin Thomas</name>
-      <email>dev@nithinthomas.com</email>
+      <email>developer@nithinthomas.com</email>
       <timezone>-6</timezone>
     </developer>
   </developers>
+  
+  <scm>
+    <url>https://github.com/nithint/major.minor.git</url>
+  </scm>
 </project>
