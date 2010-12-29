@@ -97,7 +97,7 @@ public class MajorMinorBuilder extends BuildWrapper
 		 * get latest svn revision # included in this build
 		 */
 		String revision;
-		revision = build.getEnvironment(null).get(SVN_REVISION_FIELD);
+		revision = build.getEnvironment(listener).get(SVN_REVISION_FIELD);
 
 		// if revision is not set, then this is not an scm based project. so use
 		// the build # instead of

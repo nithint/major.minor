@@ -9,10 +9,11 @@
 
   <groupId>org.jvnet.hudson.tools</groupId>
   <artifactId>majorminor</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.9</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through maven.glassfish.org, which proxies all the artifacts that we need
+   -->
   <repositories>
     <repository>
       <id>m.g.o-public</id>
@@ -26,7 +27,6 @@
       <url>http://maven.glassfish.org/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
-   -->
   <licenses>
     <license>
       <name>MIT license</name>
