@@ -2,6 +2,7 @@ package org.jvnet.hudson.tools.majorminor;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.AbstractBuild;
@@ -10,6 +11,7 @@ import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
 import hudson.util.FormValidation;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -43,6 +45,7 @@ public class MajorMinorBuilder extends BuildWrapper
 	public static final String DEFAULT_FIRST_BUILD_NAME = "0.0.00";
 	private static final String SVN_REVISION_FIELD = "SVN_REVISION";
 	private static final String BUILD_NAME_FIELD = "BUILD_NAME";
+	public static final String BUILDS_FOLDER = "builds";
 
 	/**
 	 * Regex to match the previous build name against to look for revision #
@@ -138,12 +141,15 @@ public class MajorMinorBuilder extends BuildWrapper
 		}
 
 		// declare a new final variable newBuildName so that it can be accessed
-		// from inner class
+		// from inside the environment object
 		final String newBuildName = nextBuildName;
 
 		// set build name (only available since Hudson v1.390)
 		build.setDisplayName(newBuildName);
 
+		// create new symbolic link in the builds folder with the build name that points to 
+		// this build
+		Util.createSymlink(new File(build.getRootDir(),".."), build.getId(), newBuildName, listener);
 		// add a note to the log that name was changed
 		listener.getLogger().println(String.format(LOG_NOTE, newBuildName));
 		return new Environment()
