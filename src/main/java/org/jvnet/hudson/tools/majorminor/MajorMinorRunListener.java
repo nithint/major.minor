@@ -19,9 +19,9 @@ import hudson.model.listeners.RunListener;
  *
  */
 @Extension
-public class MajorMinorRunListener extends RunListener
+public class MajorMinorRunListener<R extends Run> extends RunListener<R>
 {
-	public void onDeleted(Run r)
+	public void onDeleted(R r)
 	{
 		// if we have a symlink, delete it
         File link = new File(r.getRootDir(), "..//"+r.getDisplayName());
