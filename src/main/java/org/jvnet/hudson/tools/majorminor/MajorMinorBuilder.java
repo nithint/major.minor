@@ -124,6 +124,7 @@ public class MajorMinorBuilder extends BuildWrapper
 		String nextBuildName = "";
 		Matcher m = Pattern.compile(this.getBuildNameRegex()).matcher(
 				prevBuildName);
+		
 		if (m.matches() && m.group(1) != null)
 		{
 			nextBuildName = prevBuildName.substring(0, m.start(1)) + revision;
@@ -131,35 +132,48 @@ public class MajorMinorBuilder extends BuildWrapper
 			// add any suffix if it exists
 			if (m.end(1) + 1 < prevBuildName.length())
 				nextBuildName += prevBuildName.substring(m.end(1) + 1);
+
+			// declare a new final variable newBuildName so that it can be accessed
+			// from inside the environment object
+			final String newBuildName = nextBuildName;
+
+			// set build name (only available since Hudson v1.390)
+			build.setDisplayName(newBuildName);
+
+			// create new symbolic link in the builds folder with the build name that points to 
+			// this build
+			Util.createSymlink(new File(build.getRootDir(),".."), build.getId(), newBuildName, listener);
+			// add a note to the log that name was changed
+			listener.getLogger().println(String.format(LOG_NOTE, newBuildName));
+			return new Environment()
+			{
+				@Override
+				public void buildEnvVars(Map<String, String> env)
+				{
+					env.put(BUILD_NAME_FIELD, newBuildName);
+				}
+			};
+			
 		} else
 		{
 			// build name doesn't match pattern. error
-			listener.error(this.REGEX_NO_MATCH_ERROR); // also outputs
+			listener.error(MajorMinorBuilder.REGEX_NO_MATCH_ERROR); // also outputs
 														// this message
 														// to output
 			build.setResult(Result.FAILURE);
+			
+			final String newBuildName = build.getDisplayName();
+			// don't change build name or create symlink
+			return new Environment()
+			{
+				@Override
+				public void buildEnvVars(Map<String, String> env)
+				{
+					env.put(BUILD_NAME_FIELD, newBuildName);
+				}
+			};
 		}
 
-		// declare a new final variable newBuildName so that it can be accessed
-		// from inside the environment object
-		final String newBuildName = nextBuildName;
-
-		// set build name (only available since Hudson v1.390)
-		build.setDisplayName(newBuildName);
-
-		// create new symbolic link in the builds folder with the build name that points to 
-		// this build
-		Util.createSymlink(new File(build.getRootDir(),".."), build.getId(), newBuildName, listener);
-		// add a note to the log that name was changed
-		listener.getLogger().println(String.format(LOG_NOTE, newBuildName));
-		return new Environment()
-		{
-			@Override
-			public void buildEnvVars(Map<String, String> env)
-			{
-				env.put(BUILD_NAME_FIELD, newBuildName);
-			}
-		};
 	}
 
 	@Override
