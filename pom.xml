@@ -1,15 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.jvnet.hudson.plugins</groupId>
+    <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.390</version><!-- which version of Hudson is this plugin built against? -->
+    <version>1.400</version><!-- which version of Hudson is this plugin built against? -->
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.jvnet.hudson.tools</groupId>
   <artifactId>majorminor</artifactId>
-  <version>1.0.16</version>
+  <name>Major Minor Build Names</name>
+  <version>1.0.17-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through maven.glassfish.org, which proxies all the artifacts that we need
@@ -34,6 +35,7 @@
     </license>
   </licenses>
 
+  <description>Change build names to a meaningful major.minor.revision format</description>
   <developers>
     <developer>
       <id>nthomas</id>

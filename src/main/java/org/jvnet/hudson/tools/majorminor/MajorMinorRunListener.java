@@ -2,7 +2,6 @@
  * 
  */
 package org.jvnet.hudson.tools.majorminor;
-
 import java.io.File;
 
 import hudson.Extension;

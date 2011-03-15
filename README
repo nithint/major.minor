@@ -5,4 +5,4 @@
   If the project is not scm based, then the build number is used instead of revision # to form the build
   name. 
   
-  
+  Licensed under the MIT License
