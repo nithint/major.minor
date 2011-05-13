@@ -10,7 +10,7 @@
   <groupId>org.jvnet.hudson.tools</groupId>
   <artifactId>majorminor</artifactId>
   <name>Major Minor Build Names</name>
-  <version>1.0.23</version>
+  <version>1.0.24-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through maven.glassfish.org, which proxies all the artifacts that we need
