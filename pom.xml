@@ -10,11 +10,11 @@
   <groupId>org.jvnet.hudson.tools</groupId>
   <artifactId>majorminor</artifactId>
   <name>Major Minor Build Names</name>
-  <version>1.0.21-SNAPSHOT</version>
+  <version>1.0.22</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through maven.glassfish.org, which proxies all the artifacts that we need
-   -->
+   
   <repositories>
     <repository>
       <id>m.g.o-public</id>
@@ -28,24 +28,33 @@
       <url>http://maven.glassfish.org/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
-  <licenses>
-    <license>
-      <name>MIT license</name>
-      <comments>All source code is under the MIT license.</comments>
-    </license>
-  </licenses>
-
-  <description>Change build names to a meaningful major.minor.revision format</description>
+  -->
+  
+  <description>Change build names to a meaningful major.minor.revision format. Also supports other build name formats.</description>
   <developers>
     <developer>
-      <id>nthomas</id>
+      <id>azianguru</id>
       <name>Nithin Thomas</name>
       <email>developer@nithinthomas.com</email>
-      <timezone>-6</timezone>
     </developer>
   </developers>
   
+   <repositories>
+        <repository>
+            <id>jenkins-release-repo</id>
+            <url>http://maven.jenkins-ci.org:8081/content/groups/artifacts/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
   <scm>
-    <url>https://github.com/nithint/major.minor.git</url>
+    <connection>scm:git:ssh://github.com/jenkinsci/major-minor-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/major-minor-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/major-minor-plugin</url>
   </scm>
 </project>
